@@ -4,19 +4,76 @@
         <title>Image Zoom</title>
         <meta charset="utf-8">
         <script>
-            
+            function imageZoom (originalID, resultID){
+                let original, result, lens, rx, ry;
+                original = document.getElementById(originalID);
+                result = document.getElementById(resultID);
+                
+                lens = document.createElement('div');
+                lens.setAttribute('id', 'zoom-lens');
+
+                original.parentElement.insertBefore(lens, original);
+                
+                rx = result.offsetWidth / lens.offsetWidth;
+                ry = result.offsetHeight / lens.offsetHeight;
+
+                result.style.backgroundImage = "url('" + original.src + "')";
+                result.style.backgroundSize = (original.width * rx) + "px " + (original.height * ry) + "px";
+
+                lens.addEventListener('mousemove', moveLens);
+                original.addEventListener('mousemove', moveLens);
+
+                function moveLens (elem){
+                    let position, x, y;
+                    elem.preventDefault();
+                    position = getCursorPosition(elem);
+
+                    x = position.x - (lens.offsetWidth / 2);
+                    y = position.y - (lens.offsetHeight / 2);
+
+                    if (x > original.width - lens.offsetWidth) {x = original.width - lens.offsetWidth;}
+                    if (x < 0) {x = 0;}
+                    if (y > original.height - lens.offsetHeight) {y = original.height - lens.offsetHeight;}
+                    if (y < 0) {y = 0;}
+
+                    lens.style.left = x + "px";
+                    lens.style.top = y + "px";
+
+                    result.style.backgroundPosition = "-" + (x * rx) + "px -" + (y * ry) + "px";
+                }
+
+                function getCursorPosition (elem){
+                    let a, x = 0, y = 0;
+                    elem = elem || window.event;
+                    a = original.getBoundingClientRect();
+                    
+                    x = elem.pageX - a.left;
+                    y = elem.pageY - a.top;
+
+                    x = x - window.pageXOffset;
+                    y = y - window.pageYOffset;
+                    return { x: x, y: y };
+                }
+            }
         </script>
+        <link rel="stylesheet" href="./style.css">
     </head>
     <body>
-        <div id="zoom-container">
-            <img 
-            id="original-image" 
-            src="./pieta.jpg" 
-            width="400px" 
-            height="400px" 
-            alt="Our Lady of Sorrows"
-            >
-            <div id="zoomed-image"></div>
+        <div id="wrapper">
+            <div id="zoom-container">
+                <img 
+                id="original-image"
+                class="inner-div" 
+                src="./pieta.jpeg" 
+                width="400px" 
+                height="400px" 
+                alt="Our Lady of Sorrows"
+                >
+                <div id="zoomed-image" class="inner-div"></div>
+            </div>
         </div>
+        <script>
+            imageZoom('original-image', 'zoomed-image');
+        </script>
     </body>
 </body>

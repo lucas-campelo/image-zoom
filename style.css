@@ -1,0 +1,39 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --lens-color: #bdbdbd;
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#zoom-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+}
+
+#zoom-lens {
+    position: absolute;
+
+    height: 60px;
+    width: 60px;
+
+    border: 1px solid var(--lens-color);
+}
+
+#zoomed-image {
+    height: 400px;
+    width: 400px;
+
+    border: 1px solid var(--lens-color);
+}
